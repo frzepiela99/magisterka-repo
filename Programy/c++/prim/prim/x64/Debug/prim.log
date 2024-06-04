@@ -1,0 +1,5 @@
+﻿  prim.cpp
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\prim\prim\prim.cpp(23,11): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\prim\prim\prim.cpp(71,11): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\prim\prim\prim.cpp(187,20): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+  prim.vcxproj -> C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\prim\x64\Debug\prim.exe

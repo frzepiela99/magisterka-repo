@@ -1,0 +1,25 @@
+﻿  genetyczny.cpp
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\genetyczny\genetyczny\genetyczny.cpp(100,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xmemory(719,82): error C2512: "Individual::Individual": niedostępny odpowiedni konstruktor domyślny
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xmemory(719,82): message : podczas próby dopasowania listy argumentów "()"
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xmemory(1802,35): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „void std::_Default_allocator_traits<_Alloc>::construct<_Ty,>(_Alloc &,_Objty *const )” funkcji szablon
+          with
+          [
+              _Alloc=std::allocator<Individual>,
+              _Ty=Individual,
+              _Objty=Individual
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xmemory(2042,17): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „void std::_Uninitialized_backout_al<std::allocator<Individual>>::_Emplace_back<>(void)” funkcji szablon
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\vector(1580,27): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „Individual *std::_Uninitialized_value_construct_n<std::allocator<Individual>>(Individual *,unsigned __int64,_Alloc &)” funkcji szablon
+          with
+          [
+              _Alloc=std::allocator<Individual>
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\vector(1592,9): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „void std::vector<Individual,std::allocator<Individual>>::_Resize<std::_Value_init_tag>(const unsigned __int64,const _Ty2 &)” funkcji szablon
+          with
+          [
+              _Ty2=std::_Value_init_tag
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\vector(1590,23): message : podczas kompilowania funkcji składowej „void std::vector<Individual,std::allocator<Individual>>::resize(const unsigned __int64)” klasy klasa szablon
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\genetyczny\genetyczny\genetyczny.cpp(135,26): message : zobacz pierwsze odwołanie do elementu „std::vector<Individual,std::allocator<Individual>>::resize” w „geneticAlgorithm”
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\genetyczny\genetyczny\genetyczny.cpp(81,20): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „std::vector<Individual,std::allocator<Individual>>” klasy klasa szablon
