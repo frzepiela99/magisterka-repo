@@ -1,0 +1,3 @@
+﻿  christofides.cpp
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\BADANIA\Programy C++\christofides\christofides\christofides.cpp(91,11): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+  christofides.vcxproj -> C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\BADANIA\Programy C++\christofides\x64\Debug\christofides.exe

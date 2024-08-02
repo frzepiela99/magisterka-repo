@@ -1,33 +1,25 @@
 function main
-    startTime = tic; % Start measuring time
+    startTime = tic;
 
-    % Initialization
     [N, M, W, Route, TotalWeight] = Initialization();
 
-    % Calculations
     [Tweight, Route] = Calculations(N, W, Route);
 
-    % Display results
     fprintf('Total weight of the route: %d\n', Tweight);
     fprintf('Route: ');
     fprintf('%d ', Route);
     fprintf('\n');
 
-    EdgeSum = 0;
-    for i = 1:N-1
-        EdgeSum = EdgeSum + W(Route(i), Route(i+1));
-    end
-    EdgeSum = EdgeSum + W(Route(N), Route(1)); % Add the last edge
-
-    fprintf('Sum of all edge lengths in the route: %d\n', EdgeSum);
     fprintf('Sum of all edge weights in the graph: %d\n', TotalWeight);
 
-    duration = toc(startTime); % End measuring time
-    fprintf('Execution time: %.2f ms\n', duration * 1000);
+    duration = toc(startTime);
+    fprintf('Execution time: %.3f seconds\n', duration);
+
+    SaveResultsToCSV('results.csv', N, Route, Tweight, TotalWeight);
 end
 
 function [N, M, W, Route, TotalWeight] = Initialization()
-    fid = fopen('C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\THREEOPT\\edges300.in', 'r');
+    fid = fopen('C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\BADANIA\Dane_wejsciowe\edges50.in', 'r');
     if fid == -1
         error('File not found');
     end
@@ -143,4 +135,24 @@ function Ptr = Reverse(Ptr, start, finish)
             next = ahead;
         end
     end
+end
+
+function SaveResultsToCSV(filename, N, Route, Tweight, TotalWeight)
+    fid = fopen(filename, 'w');
+    if fid == -1
+        error('Could not create CSV file');
+    end
+    
+    fprintf(fid, 'Node,NextNode\n');
+    for i = 1:N
+        if i < N
+            fprintf(fid, '%d,%d\n', Route(i), Route(i+1));
+        else
+            fprintf(fid, '%d,%d\n', Route(i), Route(1));
+        end
+    end
+    fprintf(fid, '\nTotal weight of the route,%d\n', Tweight);
+    fprintf(fid, 'Sum of all edge weights in the graph,%d\n', TotalWeight);
+    
+    fclose(fid);
 end

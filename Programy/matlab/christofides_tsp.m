@@ -1,6 +1,6 @@
 function christofides_tsp()
     % Specify the input file path
-    filename = 'C:\\Users\\mcmys\\source\\repos\\ConsoleApplication6\\ConsoleApplication6\\edges1000.txt';
+    filename = 'C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\BADANIA\Dane_wejsciowe\edges300.in';
 
     % Read the input file
     fileID = fopen(filename, 'r');
@@ -58,11 +58,12 @@ function christofides_tsp()
     fprintf('%d\n', hamiltonianCycle(1)); % Return to the starting vertex
     fprintf('Suma wag krawedzi trasy: %.2f\n', tourCost);
     fprintf('Suma wag krawedzi w MST: %.2f\n', mstCost);
-    fprintf('Dlugosc trasy (liczba krawedzi): %d\n', length(hamiltonianCycle) - 1);
-    fprintf('Czas dzialania programu: %.0f mikrosekund\n', duration * 1e6);
+    fprintf('Czas dzialania programu: %.6f sekund\n', duration);
 
     % Save the results to a file
-    saveResults(hamiltonianCycle, tourCost, mstCost, duration * 1e6);
+    saveResults(hamiltonianCycle, tourCost, mstCost, duration);
+    % Save the results to a CSV file
+    saveResultsToCSV(hamiltonianCycle, tourCost, mstCost, duration);
 end
 
 function [mst, mstCost] = primMST(adjMatrix, V)
@@ -189,6 +190,18 @@ function saveResults(path, totalCost, mstCost, duration)
     fprintf(fileID, '\n');
     fprintf(fileID, 'Total cost of the tour: %.2f\n', totalCost);
     fprintf(fileID, 'Total cost of the MST: %.2f\n', mstCost);
-    fprintf(fileID, 'Execution time: %.0f microseconds\n', duration);
+    fprintf(fileID, 'Execution time: %.6f seconds\n', duration);
+    fclose(fileID);
+end
+
+function saveResultsToCSV(path, totalCost, mstCost, duration)
+    fileID = fopen('results.csv', 'w');
+    fprintf(fileID, 'Vertex\n');
+    for i = 1:length(path)
+        fprintf(fileID, '%d\n', path(i));
+    end
+    fprintf(fileID, 'Total cost of the tour,%.2f\n', totalCost);
+    fprintf(fileID, 'Total cost of the MST,%.2f\n', mstCost);
+    fprintf(fileID, 'Execution time (seconds),%.6f\n', duration);
     fclose(fileID);
 end

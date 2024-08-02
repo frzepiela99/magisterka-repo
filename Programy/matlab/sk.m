@@ -1,18 +1,13 @@
 function mst()
-    tic; % Start timing
+    tic;
 
-    % Load the data
-    [N, M, edges] = loadData('C:\\Users\\mcmys\\source\\repos\\ConsoleApplication6\\ConsoleApplication6\\edges1000.txt');
+    [N, M, edges] = loadData('C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges100.in');
 
-    % Initialize variables
     W = 0; % suma wag krawędzi w MST
-    L = 0; % suma długości krawędzi w MST
-    vs = zeros(M+1, 3); % Vertex structure: [row, v1, v2]
+    vs = zeros(M+1, 3); % Struktura wierzchołków: [row, v1, v2]
 
-    % Sort edges by weight
     edges = sortrows(edges, 3);
 
-    % Build the MST
     edge_count = 0;
     i = 1;
     while edge_count < M
@@ -33,17 +28,18 @@ function mst()
                     vs(t(2), 3) = t(1);
                 end
                 W = W + t(3);
-                L = L + abs(t(1) - t(2));
                 edge_count = edge_count + 1;
             end
         end
         i = i + 1;
     end
 
-    % Output results
+    execution_time = toc;
+
     disp(['Suma wag krawedzi w MST: ' num2str(W)]);
-    disp(['Suma dlugosci krawedzi w MST: ' num2str(L)]);
-    disp(['Czas dzialania programu: ' num2str(toc) ' s']);
+    disp(['Czas dzialania programu: ' num2str(execution_time) ' s']);
+
+    save_to_csv(W, execution_time, M);
 end
 
 function [N, M, edges] = loadData(filename)
@@ -72,4 +68,17 @@ function root = findroot(vs, v)
         end
     end
     root = v;
+end
+
+function save_to_csv(weight_sum, duration, vertices)
+    filename = 'result.csv';
+    fileID = fopen(filename, 'a');
+    if fileID == -1
+        error('Unable to open file to write CSV data.');
+    end
+    if ftell(fileID) == 0
+        fprintf(fileID, 'Weight Sum,Execution Time (s),Vertices\n');
+    end
+    fprintf(fileID, '%.2f,%.2f,%d\n', weight_sum, duration, vertices);
+    fclose(fileID);
 end

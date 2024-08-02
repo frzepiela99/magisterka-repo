@@ -2,47 +2,41 @@
 #include <fstream>
 #include <set>
 #include <cmath>
-#include <chrono> // Dodane do mierzenia czasu
+#include <chrono>
+#include <sstream>
 
 using namespace std;
 using namespace std::chrono;
 
-int N, M;    // liczba wierzchołków i krawędzi
-double W = 0; // suma wag krawędzi w MST
-double L = 0; // suma długości krawędzi w MST
+int N, M;    // Number of vertices and edges
+double W = 0; // Sum of edge weights in MST
 
-struct edge // krawędź
-{
-    unsigned int v1, v2; // numery wierzchołków
-    double weight;       // waga
+struct edge {
+    unsigned int v1, v2;
+    double weight;
 } t;
 
-class comp_edge
-{
+class comp_edge {
 public:
-    bool operator()(const edge& e1, const edge& e2) const
-    {
+    bool operator()(const edge& e1, const edge& e2) const {
         return e1.weight < e2.weight;
     }
 };
 
-typedef multiset<edge, comp_edge> Edge; // drzewo krawędzi
+typedef multiset<edge, comp_edge> Edge;
 Edge edges;
 Edge::iterator pos;
 
-struct vertex // wierzchołek
-{
-    unsigned int row, v1, v2; // stopień, sąsiad1, sąsiad2
+struct vertex {
+    unsigned int row, v1, v2;
 };
 
 vertex* vs;
 
-void date()
-{
-    ifstream dane("C:\\Users\\mcmys\\source\\repos\\ConsoleApplication6\\ConsoleApplication6\\edges1000.txt");
+void date() {
+    ifstream dane("C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges100.in");
     dane >> M >> N;
-    for (int i = 0; i < N; ++i)
-    {
+    for (int i = 0; i < N; ++i) {
         dane >> t.v1 >> t.v2 >> t.weight;
         edges.insert(t);
     }
@@ -55,12 +49,10 @@ void date()
     dane.close();
 }
 
-bool nocycle(edge e)
-{
+bool nocycle(edge e) {
     unsigned int v1 = e.v1, v2 = e.v2;
     v1 = vs[v1].v1 + vs[v1].v2;
-    while (v1 != v2 && vs[v1].row == 2)
-    {
+    while (v1 != v2 && vs[v1].row == 2) {
         if (vs[v1].v1)
             v1 = vs[v1].v1;
         else
@@ -69,20 +61,16 @@ bool nocycle(edge e)
     return v1 != v2;
 }
 
-void build()
-{
+void build() {
     pos = edges.begin();
-    for (int i = 1; i <= M; ++i)
-    {
+    for (int i = 1; i <= M; ++i) {
         t = *pos;
-        if (vs[t.v1].row == 2 || vs[t.v2].row == 2)
-        {
+        if (vs[t.v1].row == 2 || vs[t.v2].row == 2) {
             ++pos;
             --i;
             continue;
         }
-        if (vs[t.v1].row + vs[t.v2].row <= 1)
-        {
+        if (vs[t.v1].row + vs[t.v2].row <= 1) {
             if (vs[t.v1].v1)
                 vs[t.v1].v1 = t.v1;
             else
@@ -93,21 +81,15 @@ void build()
                 vs[t.v1].v2 = t.v2;
             ++vs[t.v1].row, ++vs[t.v2].row, ++pos;
             W += t.weight;
-            L += abs(static_cast<int>(t.v1) - static_cast<int>(t.v2));
             continue;
         }
-        if (vs[t.v1].row + vs[t.v2].row == 2)
-        {
-            if (nocycle(t) || i == M)
-            {
-                cout << '\n'
-                    << t.weight << ' ' << t.v1 << ' ' << t.v2 << " II " << i;
+        if (vs[t.v1].row + vs[t.v2].row == 2) {
+            if (nocycle(t) || i == M) {
+                cout << '\n' << t.weight << ' ' << t.v1 << ' ' << t.v2 << " II " << i;
                 ++vs[t.v1].row, ++vs[t.v2].row, ++pos;
                 W += t.weight;
-                L += abs(static_cast<int>(t.v1) - static_cast<int>(t.v2));
             }
-            else
-            {
+            else {
                 ++pos;
                 --i;
             }
@@ -116,23 +98,39 @@ void build()
     }
 }
 
-int main()
-{
-    // Rozpoczęcie mierzenia czasu
+void save_to_csv(double weight_sum, double duration, int vertices) {
+    ofstream csv_file;
+    csv_file.open("result.csv", ios::out | ios::app);
+    if (csv_file.is_open()) {
+        if (csv_file.tellp() == 0) {
+            csv_file << "Weight Sum,Execution Time (s),Vertices" << endl;
+        }
+        csv_file << weight_sum << "," << duration << "," << vertices << endl;
+        csv_file.close();
+    }
+    else {
+        cout << "Unable to open file to write CSV data." << endl;
+    }
+}
+
+int main() {
     auto start = high_resolution_clock::now();
 
     date();
     build();
 
-    // Zakończenie mierzenia czasu
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(stop - start);
 
-    cout << '\n'
-        << "Suma wag krawedzi w MST: " << W << endl;
-    cout << "Suma dlugosci krawedzi w MST: " << L << endl;
-    cout << "Czas dzialania programu: " << duration.count() << " ms" << endl;
+    double duration_seconds = duration.count() / 1000.0;
+
+    cout << '\n' << "Sum of edge weights in MST: " << W << endl;
+    cout << "Execution time: " << duration_seconds << " s" << endl;
+
+    save_to_csv(W, duration_seconds, M);
 
     cin.get();
     return 0;
 }
+
+

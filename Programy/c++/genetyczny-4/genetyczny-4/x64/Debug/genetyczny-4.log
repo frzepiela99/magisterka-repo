@@ -1,0 +1,4 @@
+﻿  genetyczny-4.cpp
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\genetyczny-4\genetyczny-4\genetyczny-4.cpp(78,14): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\genetyczny-4\genetyczny-4\genetyczny-4.cpp(113,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  genetyczny-4.vcxproj -> C:\Users\mcmys\OneDrive\Pulpit\magisterka repo\magisterka-repo\Programy\c++\genetyczny-4\x64\Debug\genetyczny-4.exe

@@ -2,7 +2,7 @@ function mst()
     tic; % Start timing
 
     % Load the data
-    [N, M, edges] = loadData('C:\\Users\\mcmys\\source\\repos\\ConsoleApplication6\\ConsoleApplication6\\edges1000.txt');
+    [N, M, edges] = loadData('C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges1000.txt');
 
     % Initialize variables
     W = 0; % suma wag krawędzi w MST

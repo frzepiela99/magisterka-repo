@@ -10,14 +10,14 @@
 #include <utility>
 #include <sstream>
 #include <chrono>
+#include <iomanip>
 
 using namespace std;
 using namespace std::chrono;
 
-// Struktura reprezentująca graf
 struct Graph {
-    int V; // Liczba wierzchołków
-    std::vector<std::vector<double>> adjMatrix; // Macierz sąsiedztwa
+    int V;
+    std::vector<std::vector<double>> adjMatrix;
 
     Graph(int V) : V(V), adjMatrix(V, std::vector<double>(V, 0)) {}
 
@@ -27,7 +27,7 @@ struct Graph {
     }
 };
 
-// Funkcja obliczająca minimalne drzewo rozpinające za pomocą algorytmu Prima
+// Funkcja obliczająca MST za pomocą algorytmu Prima
 Graph primMST(const Graph& graph, double& mstCost) {
     int V = graph.V;
     Graph mst(V);
@@ -111,23 +111,17 @@ std::vector<std::pair<int, int>> minWeightMatching(const Graph& graph, const std
     return matching;
 }
 
-// Funkcja realizująca algorytm Christofidesa
 std::vector<int> christofidesAlgorithm(const Graph& graph, double& tourCost, double& mstCost) {
-    // Krok 1: Znajdź minimalne drzewo rozpinające (MST)
     Graph mst = primMST(graph, mstCost);
 
-    // Krok 2: Znajdź wierzchołki o nieparzystym stopniu w MST
     std::vector<int> oddDegreeVertices = findOddDegreeVertices(mst);
 
-    // Krok 3: Znajdź minimalne doskonałe skojarzenie dla tych wierzchołków
     std::vector<std::pair<int, int>> matching = minWeightMatching(graph, oddDegreeVertices);
 
-    // Krok 4: Dodaj krawędzie skojarzenia do MST, aby utworzyć graf eulerowski
     for (const auto& edge : matching) {
         mst.addEdge(edge.first, edge.second, graph.adjMatrix[edge.first][edge.second]);
     }
 
-    // Krok 5: Znajdź cykl Eulera w powstałym grafie
     std::vector<int> eulerianCycle;
     std::vector<bool> visited(graph.V, false);
     std::vector<int> stack;
@@ -153,7 +147,6 @@ std::vector<int> christofidesAlgorithm(const Graph& graph, double& tourCost, dou
         }
     }
 
-    // Krok 6: Stwórz cykl Hamiltona z cyklu Eulera (pomijając powtarzające się wierzchołki)
     std::vector<int> hamiltonianCycle;
     std::vector<bool> visitedHamiltonian(graph.V, false);
 
@@ -164,34 +157,30 @@ std::vector<int> christofidesAlgorithm(const Graph& graph, double& tourCost, dou
         }
     }
 
-    // Obliczanie sumy wag krawędzi trasy
     tourCost = 0;
     for (size_t i = 0; i < hamiltonianCycle.size() - 1; ++i) {
         tourCost += graph.adjMatrix[hamiltonianCycle[i]][hamiltonianCycle[i + 1]];
     }
-    // Dodanie kosztu powrotu do startowego wierzchołka
     tourCost += graph.adjMatrix[hamiltonianCycle.back()][hamiltonianCycle[0]];
 
     return hamiltonianCycle;
 }
 
-// Funkcja do zapisywania wyników do pliku
-void saveResults(const std::vector<int>& path, double totalCost, double mstCost, long long duration) {
-    std::ofstream outFile("results.txt");
-    outFile << "Path: ";
+void saveResults(const std::vector<int>& path, double totalCost, double mstCost, double duration) {
+    std::ofstream csvFile("results.csv");
+    csvFile << "Vertex\n";
     for (int v : path) {
-        outFile << v + 1 << " "; // Zamiana indeksów na 1-bazowe
+        csvFile << v + 1 << "\n";
     }
-    outFile << std::endl;
-
-    outFile << "Total cost of the tour: " << totalCost << std::endl;
-    outFile << "Total cost of the MST: " << mstCost << std::endl;
-    outFile << "Execution time: " << duration << " microseconds" << std::endl;
-    outFile.close();
+    csvFile << "Total cost of the tour," << totalCost << "\n";
+    csvFile << "Total cost of the MST," << mstCost << "\n";
+    csvFile << std::fixed << std::setprecision(3);
+    csvFile << "Execution time (seconds)," << duration << "\n";
+    csvFile.close();
 }
 
 int main() {
-    std::ifstream inputFile("C:\\Users\\mcmys\\source\\repos\\ConsoleApplication6\\ConsoleApplication6\\edges1000.txt");
+    std::ifstream inputFile("C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges100.in");
     if (!inputFile) {
         std::cerr << "Nie można otworzyć pliku." << std::endl;
         return 1;
@@ -204,7 +193,7 @@ int main() {
     int u, v;
     double w;
     while (inputFile >> u >> v >> w) {
-        graph.addEdge(u - 1, v - 1, w); // Zamiana indeksów na 0-bazowe
+        graph.addEdge(u - 1, v - 1, w);
     }
 
     auto start = high_resolution_clock::now();
@@ -213,18 +202,18 @@ int main() {
     std::vector<int> tour = christofidesAlgorithm(graph, tourCost, mstCost);
 
     auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
+    duration<double> duration = stop - start;
 
     std::cout << "Znaleziona trasa: ";
     for (int v : tour) {
-        std::cout << (v + 1) << " "; // Zamiana indeksów na 1-bazowe
+        std::cout << (v + 1) << " ";
     }
-    std::cout << (tour[0] + 1) << std::endl; // Powrót do początkowego wierzchołka
+    std::cout << (tour[0] + 1) << std::endl;
 
     std::cout << "Suma wag krawedzi trasy: " << tourCost << std::endl;
     std::cout << "Suma wag krawedzi w MST: " << mstCost << std::endl;
-    std::cout << "Dlugosc trasy (liczba krawedzi): " << tour.size() - 1 << std::endl;
-    std::cout << "Czas dzialania programu: " << duration.count() << " mikrosekund" << std::endl;
+    std::cout << std::fixed << std::setprecision(3);
+    std::cout << "Czas dzialania programu: " << duration.count() << " sekund" << std::endl;
 
     saveResults(tour, tourCost, mstCost, duration.count());
 

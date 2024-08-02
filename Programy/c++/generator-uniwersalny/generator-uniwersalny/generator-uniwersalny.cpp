@@ -7,14 +7,12 @@
 using namespace std;
 
 void generateEdgesFile(int N) {
-    int M = N * (N - 1) / 2; // liczba krawędzi dla grafu pełnego
+    int M = N * (N - 1) / 2;
 
-    // Rozpoczęcie pomiaru czasu
     auto start = chrono::high_resolution_clock::now();
 
-    // Użycie std::stringstream do stworzenia nazwy pliku
     stringstream ss;
-    ss << "edges" << N << ".txt";
+    ss << "edges" << N << ".in";
     string fileName = ss.str();
 
     ofstream dane(fileName);
@@ -27,36 +25,31 @@ void generateEdgesFile(int N) {
     }
     dane.close();
 
-    // Zakończenie pomiaru czasu
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = end - start;
 
-    // Wyświetlenie czasu wykonania na konsoli
     cout << "Plik " << fileName << " wygenerowany. Czas wykonania: " << elapsed.count() << " sekund" << endl;
 }
 
 int main() {
-    // Rozpoczęcie pomiaru całkowitego czasu
     auto startTotal = chrono::high_resolution_clock::now();
 
     int numFiles;
-    cout << "Podaj liczbę plików do wygenerowania: ";
+    cout << "Podaj liczbe plikow do wygenerowania: ";
     cin >> numFiles;
 
     int N;
-    cout << "Podaj liczbę wierzchołków dla każdego pliku: ";
+    cout << "Podaj liczbe wierzcholkow dla kazdego pliku: ";
     cin >> N;
 
     for (int i = 1; i <= numFiles; ++i) {
         generateEdgesFile(N);
     }
 
-    // Zakończenie pomiaru całkowitego czasu
     auto endTotal = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsedTotal = endTotal - startTotal;
 
-    // Wyświetlenie całkowitego czasu wykonania na konsoli
-    cout << "Całkowity czas wykonania programu: " << elapsedTotal.count() << " sekund" << endl;
+    cout << "Calkowity czas wykonania programu: " << elapsedTotal.count() << " sekund" << endl;
 
     return 0;
 }

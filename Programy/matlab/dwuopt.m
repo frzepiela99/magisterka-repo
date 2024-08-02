@@ -3,38 +3,40 @@ function dwuopt
 end
 
 function main
-    tic; % Rozpocznij pomiar czasu
+    tic;
 
     [N, M, W, Route, TotalWeight] = Initialization();
     Tweight = calculateInitialWeight(N, W, Route);
     
     [Ptr, Route, Tweight] = Calculations(N, W, Route, Tweight);
 
-    disp('Total weight of the route: ');
+    disp('Displaying a portion of the weight matrix for verification:');
+    displayMatrix(W, min(10, N));
+    
+    disp('Total weight of the route:');
     disp(Tweight);
 
-    disp('Route: ');
+    disp('Route:');
     disp(Route);
 
     EdgeSum = 0;
     for i = 1:N-1
         EdgeSum = EdgeSum + W(Route(i), Route(i + 1));
     end
-    EdgeSum = EdgeSum + W(Route(N), Route(1)); % Dodaj ostatnią krawędź do sumy
+    EdgeSum = EdgeSum + W(Route(N), Route(1));
 
-    disp('Sum of all edge lengths in the route: ');
+    disp('Sum of all edge lengths in the route:');
     disp(EdgeSum);
 
-    disp('Sum of all edge weights in the graph: ');
+    disp('Sum of all edge weights in the graph:');
     disp(TotalWeight);
 
-    elapsedTime = toc; % Zakończ pomiar czasu
-    disp('Execution time: ');
-    disp(elapsedTime * 1000); % Czas w milisekundach
+    elapsedTime = toc;
+    fprintf('Execution time: %.3f s\n', elapsedTime);
 end
 
 function [N, M, W, Route, TotalWeight] = Initialization()
-    filename = 'C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\TWOOPT\\edges1000.in';
+    filename = 'C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges100.in';
     fileID = fopen(filename, 'r');
     data = fscanf(fileID, '%d');
     fclose(fileID);
@@ -52,11 +54,10 @@ function [N, M, W, Route, TotalWeight] = Initialization()
         Temp = data(idx + 2);
         W(X, Y) = Temp;
         W(Y, X) = Temp;
-        TotalWeight = TotalWeight + Temp; % Dodaj wagę krawędzi do całkowitej sumy wag
+        TotalWeight = TotalWeight + Temp;
         idx = idx + 3;
     end
     
-    % Initialize W diagonal to 0
     for i = 1:N
         W(i, i) = 0;
     end
@@ -125,5 +126,14 @@ function [Ptr, Route, Tweight] = Calculations(N, W, Route, Tweight)
     for I = 1:N
         Route(I) = Index;
         Index = Ptr(Index);
+    end
+end
+
+function displayMatrix(W, size)
+    for k = 1:size
+        for l = 1:size
+            fprintf('%d\t', W(k, l));
+        end
+        fprintf('\n');
     end
 end

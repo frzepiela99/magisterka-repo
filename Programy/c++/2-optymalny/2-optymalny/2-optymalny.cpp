@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <chrono>
+#include <iomanip>  // Dodano do użycia std::setprecision
 
 using namespace std;
 using namespace std::chrono;
@@ -11,12 +12,12 @@ int** W;
 int* Route;
 int Ahead, I, I1, I2, Index, J, J1, J2, Last, Limit, Max, Max1, Next, S1, S2, T1, T2;
 int Tweight = 0;
-int TotalWeight = 0; // Zmienna do przechowywania sumy wag wszystkich krawędzi
+int TotalWeight = 0;
 
 void Initialization()
 {
     int X, Y, Temp;
-    ifstream date("C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\TWOOPT\\edges100.in");
+    ifstream date("C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges100.in");
     date >> N >> M;
     Ptr = new int[N + 1];
     Route = new int[N + 1];
@@ -27,7 +28,7 @@ void Initialization()
         date >> X >> Y >> Temp;
         W[X][Y] = Temp;
         W[Y][X] = Temp;
-        TotalWeight += Temp; // Dodaj wagę krawędzi do całkowitej sumy wag
+        TotalWeight += Temp;
     }
     for (int i = 1; i <= N; ++i) Route[i] = i, W[i][i] = 0;
     for (int i = 1; i < N; ++i) Tweight += W[i][i + 1];
@@ -61,36 +62,46 @@ void Calculations()
         }
     } while (Max != 0);
     Index = 1;
-    for (I = 1; I <= N; ++I) Route[I] = Index, Index = Ptr[Index]; for (int i = 1; i <= N; ++i);
+    for (I = 1; I <= N; ++I) Route[I] = Index, Index = Ptr[Index];
 }
 
 int main()
 {
-    auto start = high_resolution_clock::now(); // Rozpocznij pomiar czasu
+    auto start = high_resolution_clock::now();
 
     Initialization();
-    for (int k = 1; k <= N; ++k)
+
+    cout << "Displaying a portion of the weight matrix for verification:" << endl;
+    for (int k = 1; k <= min(10, N); ++k)
     {
-        for (int l = 1; l <= N; ++l) cout << W[k][l] << '\t';
+        for (int l = 1; l <= min(10, N); ++l)
+        {
+            cout << W[k][l] << '\t';
+        }
         cout << '\n';
     }
+
     Calculations();
+
     cout << "Total weight of the route: " << Tweight << endl;
     cout << "Route: ";
     for (int i = 1; i <= N; ++i) cout << Route[i] << "  ";
     cout << endl;
 
-    int EdgeSum = 0;
-    for (int i = 1; i < N; ++i)
-        EdgeSum += W[Route[i]][Route[i + 1]];
-    EdgeSum += W[Route[N]][Route[1]]; // Dodaj ostatnią krawędź do sumy
-
-    cout << "Sum of all edge lengths in the route: " << EdgeSum << endl;
     cout << "Sum of all edge weights in the graph: " << TotalWeight << endl;
 
-    auto end = high_resolution_clock::now(); // Zakończ pomiar czasu
-    auto duration = duration_cast<milliseconds>(end - start).count();
-    cout << "Execution time: " << duration << " ms" << endl;
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(end - start).count();
+    double seconds = duration / 1e6;
+    cout << "Execution time: " << fixed << setprecision(3) << seconds << " s" << endl;
+
+    ofstream outputFile("output.csv");
+    outputFile << "Total weight of the route," << Tweight << "\n";
+    outputFile << "Route,";
+    for (int i = 1; i <= N; ++i) outputFile << Route[i] << (i < N ? "," : "\n");
+    outputFile << "Sum of all edge weights in the graph," << TotalWeight << "\n";
+    outputFile << "Execution time," << fixed << setprecision(3) << seconds << " s\n";
+    outputFile.close();
 
     cin.get();
     return 0;

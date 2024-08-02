@@ -11,7 +11,7 @@ int** W;
 int* Route;
 int Ahead, I, J, K, Index, Limit, Max;
 int Tweight = 0;
-int TotalWeight = 0; // Zmienna do przechowywania sumy wag wszystkich krawędzi
+int TotalWeight = 0;
 enum SwapType { Asym, Sym };
 struct SwapData
 {
@@ -40,7 +40,7 @@ void Reverse(int start, int finish)
 void Initialization()
 {
     int X, Y, Temp;
-    ifstream data("C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\THREEOPT\\edges300.in");
+    ifstream data("C:\\Users\\mcmys\\OneDrive\\Pulpit\\magisterka repo\\magisterka-repo\\Programy\\testy\\edges100.in");
     data >> N >> M;
     Ptr = new int[N + 1];
     Route = new int[N + 1];
@@ -51,7 +51,7 @@ void Initialization()
         data >> X >> Y >> Temp;
         W[X][Y] = Temp;
         W[Y][X] = Temp;
-        TotalWeight += Temp; // Dodaj wagę krawędzi do całkowitej sumy wag
+        TotalWeight += Temp;
     }
     for (int i = 1; i <= N; ++i) Route[i] = i, W[i][i] = 0;
     for (int i = 1; i < N; ++i) Tweight += W[i][i + 1];
@@ -99,9 +99,23 @@ void Calculations()
     for (int I = 1; I <= N; ++I) Route[I] = Index, Index = Ptr[Index];
 }
 
+void SaveResultsToCSV(const string& filename, double duration)
+{
+    ofstream csvFile(filename);
+    csvFile << "Node,NextNode\n";
+    for (int i = 1; i <= N; ++i)
+    {
+        csvFile << Route[i] << "," << Ptr[Route[i]] << "\n";
+    }
+    csvFile << "\nTotal weight of the route," << Tweight << "\n";
+    csvFile << "Sum of all edge weights in the graph," << TotalWeight << "\n";
+    csvFile << "Execution time (seconds)," << duration << "\n";
+    csvFile.close();
+}
+
 int main()
 {
-    auto start = high_resolution_clock::now(); // Rozpocznij pomiar czasu
+    auto start = high_resolution_clock::now();
 
     Initialization();
     Calculations();
@@ -110,17 +124,14 @@ int main()
     for (int i = 1; i <= N; ++i) cout << Route[i] << "  ";
     cout << endl;
 
-    int EdgeSum = 0;
-    for (int i = 1; i < N; ++i)
-        EdgeSum += W[Route[i]][Route[i + 1]];
-    EdgeSum += W[Route[N]][Route[1]]; // Dodaj ostatnią krawędź do sumy
-
-    cout << "Sum of all edge lengths in the route: " << EdgeSum << endl;
     cout << "Sum of all edge weights in the graph: " << TotalWeight << endl;
 
-    auto end = high_resolution_clock::now(); // Zakończ pomiar czasu
+    auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start).count();
-    cout << "Execution time: " << duration << " ms" << endl;
+    double duration_seconds = duration / 1000.0;
+    cout << "Execution time: " << duration_seconds << " seconds" << endl;
+
+    SaveResultsToCSV("results.csv", duration_seconds);
 
     cin.get();
     return 0;
